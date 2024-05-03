@@ -2,12 +2,14 @@
 
 import { Box, HStack, Input, Text, VStack } from "@chakra-ui/react";
 import React from "react";
-import { DynamicTable } from "@/components/table";
+import { BasicTable } from "@/components/table";
 import { URLS } from "@/constants";
+import { useUsers } from "./use-users";
 
 const rootUrl = URLS.USERS;
 
 export function Users() {
+  const { contents } = useUsers({ page: "", pageSize: "" });
   return (
     <>
       <Box bgColor="#ffffff" borderRadius="10px">
@@ -19,7 +21,7 @@ export function Users() {
         >
           <Text>User List</Text>
         </HStack>
-        {[].length ? (
+        {contents.length ? (
           <VStack p={4} alignItems="flex-start" spacing={4}>
             <HStack w="full" justifyContent="space-between">
               <HStack justifyContent="space-between">
@@ -30,8 +32,8 @@ export function Users() {
               </HStack>
             </HStack>
             <Box w="full">
-              <DynamicTable
-                data={[]}
+              <BasicTable
+                data={contents}
                 headColumns={[
                   {
                     key: "id",
@@ -46,7 +48,6 @@ export function Users() {
                     name: "Email",
                   },
                 ]}
-                toggleSelectRow={() => {}}
                 handleDelete={() => {}}
                 rootUrl={rootUrl}
               />
