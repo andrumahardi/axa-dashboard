@@ -53,7 +53,7 @@ export function MainContainer({ children }: { children: React.ReactNode }) {
           <UpperNav onClick={compressNav} />
         </Box>
         <Box minH="100vh" position="relative" overflow="auto">
-          <Box pt={16} px={4} mb={14}>
+          <Box pt={20} px={4} mb={14}>
             {children}
           </Box>
           <Footer />
