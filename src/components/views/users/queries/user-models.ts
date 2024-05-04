@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 
-type ListResponse = Array<{
+export type UserListResponse = Array<{
   id: number;
   name: string;
   username: string;
@@ -19,7 +19,7 @@ type ListResponse = Array<{
 }>;
 
 export type UsersModel = ReturnType<typeof usersModel>;
-export function usersModel({ data }: AxiosResponse<ListResponse>) {
+export function usersModel({ data }: AxiosResponse<UserListResponse>) {
   return data.map((item) => ({
     id: item.id,
     name: item.name || "-",
