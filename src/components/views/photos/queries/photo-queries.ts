@@ -1,8 +1,9 @@
 import { FetchError } from "@/types";
 import { axiosFetch, generateQueryParams } from "@/utils";
-import { useQuery } from "@tanstack/react-query";
+import { UseQueryOptions, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { photosModel } from "./photo-models";
+import { photoDetailModel, photosModel } from "./photo-models";
+import { getAlbumDetail, getAlbums } from "../../albums/queries";
 
 export type PhotosQuery = {
   albumId: string;
@@ -15,6 +16,7 @@ export const photoKeys = {
     "LIST",
     generateQueryParams(query),
   ],
+  detail: () => [...photoKeys.all, "DETAIL"],
 };
 
 export async function getPhotos(
@@ -36,5 +38,43 @@ export function useGetPhotos(query: PhotosQuery) {
       const fetch = axiosFetch();
       return await getPhotos(query, fetch);
     },
+  );
+}
+
+export async function getPhotoDetail(
+  id: string,
+  fetch: ReturnType<typeof axiosFetch>,
+) {
+  const photo = await fetch.get(`/photos/${id}`);
+  const album = await getAlbumDetail(photo?.data?.id || "", fetch);
+  return {
+    data: photoDetailModel(photo.data, album.data),
+  };
+}
+
+type GetPhotoDetailCache = Awaited<ReturnType<typeof getPhotoDetail>>;
+
+export function useGetPhotoDetail({
+  id,
+  options,
+}: {
+  id: string;
+  options?: UseQueryOptions<
+    GetPhotoDetailCache,
+    AxiosError<FetchError>,
+    GetPhotoDetailCache
+  >;
+}) {
+  return useQuery<
+    GetPhotoDetailCache,
+    AxiosError<FetchError>,
+    GetPhotoDetailCache
+  >(
+    photoKeys.detail(),
+    async () => {
+      const fetch = axiosFetch();
+      return await getPhotoDetail(id, fetch);
+    },
+    { ...(options ? options : {}) },
   );
 }

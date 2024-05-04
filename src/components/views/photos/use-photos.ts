@@ -23,7 +23,6 @@ export function usePhotos() {
   const contents = generateContents(photos?.data || [], albums?.data || []);
 
   function onChange(e: ChangeEvent<HTMLSelectElement>) {
-    console.log(e.target.value);
     router.push(
       `${URLS.PHOTOS}${generateQueryParams({ albumId: e.target.value })}`,
     );
