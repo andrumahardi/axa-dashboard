@@ -5,8 +5,7 @@ import { AxiosError } from "axios";
 import { photosModel } from "./photo-models";
 
 export type PhotosQuery = {
-  page: string;
-  pageSize: string;
+  albumId: string;
 };
 
 export const photoKeys = {
