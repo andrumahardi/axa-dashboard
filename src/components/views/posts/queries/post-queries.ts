@@ -4,14 +4,14 @@ import { useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { postsModel } from "./post-models";
 
-export type UsersQuery = {
+export type PostsQuery = {
   page: string;
   pageSize: string;
 };
 
 export const postKeys = {
   all: ["POST"],
-  list: (query: UsersQuery) => [
+  list: (query: PostsQuery) => [
     ...postKeys.all,
     "LIST",
     generateQueryParams(query),
@@ -19,7 +19,7 @@ export const postKeys = {
 };
 
 export async function getPosts(
-  query: UsersQuery,
+  query: PostsQuery,
   fetch: ReturnType<typeof axiosFetch>,
 ) {
   const res = await fetch.get(`/posts${generateQueryParams(query)}`);
@@ -30,7 +30,7 @@ export async function getPosts(
 
 type GetPostsCache = Awaited<ReturnType<typeof getPosts>>;
 
-export function useGetPosts(query: UsersQuery) {
+export function useGetPosts(query: PostsQuery) {
   return useQuery<GetPostsCache, AxiosError<FetchError>, GetPostsCache>(
     postKeys.list(query),
     async () => {

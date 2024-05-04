@@ -4,12 +4,12 @@ import { Box, HStack, Input, Text, VStack } from "@chakra-ui/react";
 import React from "react";
 import { BasicTable } from "@/components/table";
 import { URLS } from "@/constants";
-import { usePosts } from "./use-posts";
+import { useAlbums } from "./use-albums";
 
-const rootUrl = URLS.POSTS;
+const rootUrl = URLS.ALBUMS;
 
-export function Posts() {
-  const { posts } = usePosts({ page: "", pageSize: "" });
+export function Albums() {
+  const { albums } = useAlbums({ page: "", pageSize: "" });
   return (
     <>
       <Box bgColor="#ffffff" borderRadius="10px">
@@ -19,9 +19,9 @@ export function Posts() {
           borderColor="#eaeaea"
           justifyContent="space-between"
         >
-          <Text>Post List</Text>
+          <Text>Album List</Text>
         </HStack>
-        {posts.length ? (
+        {albums.length ? (
           <VStack p={4} alignItems="flex-start" spacing={4}>
             <HStack w="full" justifyContent="space-between">
               <HStack justifyContent="space-between">
@@ -33,19 +33,19 @@ export function Posts() {
             </HStack>
             <Box w="full">
               <BasicTable
-                data={posts}
+                data={albums}
                 headColumns={[
                   {
                     key: "id",
                     name: "ID",
                   },
                   {
-                    key: "user",
-                    name: "User",
-                  },
-                  {
                     key: "title",
                     name: "Title",
+                  },
+                  {
+                    key: "user",
+                    name: "User",
                   },
                 ]}
                 handleDelete={() => {}}
