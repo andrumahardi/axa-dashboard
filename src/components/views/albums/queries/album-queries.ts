@@ -4,22 +4,22 @@ import { useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { albumsModel } from "./album-models";
 
-export type albumsQuery = {
+export type AlbumsQuery = {
   page: string;
   pageSize: string;
 };
 
-export const userKeys = {
+export const albumKeys = {
   all: ["ALBUM"],
-  list: (query: albumsQuery) => [
-    ...userKeys.all,
+  list: (query: AlbumsQuery) => [
+    ...albumKeys.all,
     "LIST",
     generateQueryParams(query),
   ],
 };
 
 export async function getAlbums(
-  query: albumsQuery,
+  query: AlbumsQuery,
   fetch: ReturnType<typeof axiosFetch>,
 ) {
   const res = await fetch.get(`/albums${generateQueryParams(query)}`);
@@ -30,9 +30,9 @@ export async function getAlbums(
 
 type GetAlbumsCache = Awaited<ReturnType<typeof getAlbums>>;
 
-export function useGetAlbums(query: albumsQuery) {
+export function useGetAlbums(query: AlbumsQuery) {
   return useQuery<GetAlbumsCache, AxiosError<FetchError>, GetAlbumsCache>(
-    userKeys.list(query),
+    albumKeys.list(query),
     async () => {
       const fetch = axiosFetch();
       return await getAlbums(query, fetch);
