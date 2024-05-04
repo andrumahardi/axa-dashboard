@@ -1,6 +1,8 @@
 import { AxiosResponse } from "axios";
 
-export type UserListResponse = Array<{
+export type UserListResponse = Array<UserDetailResponse>;
+
+export type UserDetailResponse = {
   id: number;
   name: string;
   username: string;
@@ -16,7 +18,7 @@ export type UserListResponse = Array<{
     };
   };
   phone: string;
-}>;
+};
 
 export type UsersModel = ReturnType<typeof usersModel>;
 export function usersModel({ data }: AxiosResponse<UserListResponse>) {
@@ -37,4 +39,25 @@ export function usersModel({ data }: AxiosResponse<UserListResponse>) {
     },
     phone: item.phone || "-",
   }));
+}
+
+export type UserDetailModel = ReturnType<typeof userDetailModel>;
+export function userDetailModel(data: UserDetailResponse) {
+  return {
+    id: data.id,
+    name: data.name || "-",
+    username: data.username || "-",
+    email: data.email || "-",
+    address: {
+      street: data.address?.city || "-",
+      suite: data.address?.suite || "-",
+      city: data.address?.city || "-",
+      zipcode: data.address?.zipcode || "-",
+      geo: {
+        lat: data.address?.geo?.lat || "-",
+        lng: data.address?.geo?.lng || "-",
+      },
+    },
+    phone: data.phone || "-",
+  };
 }

@@ -1,8 +1,9 @@
 import { FetchError } from "@/types";
 import { axiosFetch, generateQueryParams } from "@/utils";
-import { useQuery } from "@tanstack/react-query";
+import { UseQueryOptions, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { postsModel } from "./post-models";
+import { postDetailModel, postsModel } from "./post-models";
+import { getUserDetail } from "../../users/queries";
 
 export type PostsQuery = {
   page: string;
@@ -16,6 +17,7 @@ export const postKeys = {
     "LIST",
     generateQueryParams(query),
   ],
+  detail: () => [...postKeys.all, "DETAIL"],
 };
 
 export async function getPosts(
@@ -37,5 +39,44 @@ export function useGetPosts(query: PostsQuery) {
       const fetch = axiosFetch();
       return await getPosts(query, fetch);
     },
+  );
+}
+
+export async function getPostDetail(
+  id: string,
+  fetch: ReturnType<typeof axiosFetch>,
+) {
+  const post = await fetch.get(`/posts/${id}`);
+  const user = await getUserDetail(post?.data?.userId, fetch);
+
+  return {
+    data: postDetailModel(post.data || {}, user.data || {}),
+  };
+}
+
+type GetPostDetailCache = Awaited<ReturnType<typeof getPostDetail>>;
+
+export function useGetPostDetail({
+  id,
+  options,
+}: {
+  id: string;
+  options?: UseQueryOptions<
+    GetPostDetailCache,
+    AxiosError<FetchError>,
+    GetPostDetailCache
+  >;
+}) {
+  return useQuery<
+    GetPostDetailCache,
+    AxiosError<FetchError>,
+    GetPostDetailCache
+  >(
+    postKeys.detail(),
+    async () => {
+      const fetch = axiosFetch();
+      return await getPostDetail(id, fetch);
+    },
+    { ...(options ? options : {}) },
   );
 }

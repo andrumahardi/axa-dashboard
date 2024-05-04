@@ -28,15 +28,6 @@ export function BasicRowActionBtns({
       {!isReadOnly ? (
         <>
           <Button
-            as="a"
-            href={links.edit}
-            variant="outline"
-            colorScheme="blue"
-            size="xs"
-          >
-            Edit
-          </Button>
-          <Button
             variant="solid"
             colorScheme="red"
             size="xs"
