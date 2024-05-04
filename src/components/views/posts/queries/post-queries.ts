@@ -6,8 +6,7 @@ import { postDetailModel, postsModel } from "./post-models";
 import { getUserDetail } from "../../users/queries";
 
 export type PostsQuery = {
-  page: string;
-  pageSize: string;
+  userId: string;
 };
 
 export const postKeys = {
