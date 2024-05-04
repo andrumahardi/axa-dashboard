@@ -5,11 +5,12 @@ import React from "react";
 import { BasicTable } from "@/components/table";
 import { URLS } from "@/constants";
 import { usePhotos } from "./use-photos";
+import { BasicTableSkeleton } from "@/components/table/basic-table-skeleton";
 
 const rootUrl = URLS.PHOTOS;
 
 export function Photos() {
-  const { photos } = usePhotos({ page: "", pageSize: "" });
+  const { photos, isLoading } = usePhotos({ page: "", pageSize: "" });
   return (
     <>
       <Box bgColor="#ffffff" borderRadius="10px">
@@ -21,16 +22,11 @@ export function Photos() {
         >
           <Text>Photo List</Text>
         </HStack>
-        {photos.length ? (
-          <VStack p={4} alignItems="flex-start" spacing={4}>
-            <HStack w="full" justifyContent="space-between">
-              <HStack justifyContent="space-between">
-                <HStack>
-                  <Text>Search: </Text>
-                  <Input />
-                </HStack>
-              </HStack>
-            </HStack>
+
+        <VStack p={4}>
+          {isLoading ? (
+            <BasicTableSkeleton />
+          ) : (
             <Box w="full">
               <BasicTable
                 data={photos}
@@ -52,12 +48,8 @@ export function Photos() {
                 rootUrl={rootUrl}
               />
             </Box>
-          </VStack>
-        ) : (
-          <VStack p={4}>
-            <Text>This table is empty ;(</Text>
-          </VStack>
-        )}
+          )}
+        </VStack>
       </Box>
     </>
   );

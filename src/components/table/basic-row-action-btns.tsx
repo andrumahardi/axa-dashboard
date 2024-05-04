@@ -6,23 +6,46 @@ type Props = {
     view: string;
     edit: string;
   };
+  isReadOnly?: boolean;
 };
 
-export function BasicRowActionBtns({ onDelete, links }: Props) {
+export function BasicRowActionBtns({
+  onDelete,
+  links,
+  isReadOnly = true,
+}: Props) {
   return (
     <HStack spacing={1}>
       <Button
         as="a"
-        href={links.edit}
-        variant="solid"
-        colorScheme="teal"
+        href={links.view}
+        variant="outline"
+        colorScheme="blue"
         size="xs"
       >
-        Edit
+        View
       </Button>
-      <Button variant="solid" colorScheme="red" size="xs" onClick={onDelete}>
-        Delete
-      </Button>
+      {!isReadOnly ? (
+        <>
+          <Button
+            as="a"
+            href={links.edit}
+            variant="outline"
+            colorScheme="blue"
+            size="xs"
+          >
+            Edit
+          </Button>
+          <Button
+            variant="solid"
+            colorScheme="red"
+            size="xs"
+            onClick={onDelete}
+          >
+            Delete
+          </Button>
+        </>
+      ) : null}
     </HStack>
   );
 }

@@ -5,11 +5,12 @@ import React from "react";
 import { BasicTable } from "@/components/table";
 import { URLS } from "@/constants";
 import { useAlbums } from "./use-albums";
+import { BasicTableSkeleton } from "@/components/table/basic-table-skeleton";
 
 const rootUrl = URLS.ALBUMS;
 
 export function Albums() {
-  const { albums } = useAlbums({ page: "", pageSize: "" });
+  const { albums, isLoading } = useAlbums({ page: "", pageSize: "" });
   return (
     <>
       <Box bgColor="#ffffff" borderRadius="10px">
@@ -21,16 +22,11 @@ export function Albums() {
         >
           <Text>Album List</Text>
         </HStack>
-        {albums.length ? (
-          <VStack p={4} alignItems="flex-start" spacing={4}>
-            <HStack w="full" justifyContent="space-between">
-              <HStack justifyContent="space-between">
-                <HStack>
-                  <Text>Search: </Text>
-                  <Input />
-                </HStack>
-              </HStack>
-            </HStack>
+
+        <VStack p={4}>
+          {isLoading ? (
+            <BasicTableSkeleton />
+          ) : (
             <Box w="full">
               <BasicTable
                 data={albums}
@@ -52,12 +48,8 @@ export function Albums() {
                 rootUrl={rootUrl}
               />
             </Box>
-          </VStack>
-        ) : (
-          <VStack p={4}>
-            <Text>This table is empty ;(</Text>
-          </VStack>
-        )}
+          )}
+        </VStack>
       </Box>
     </>
   );

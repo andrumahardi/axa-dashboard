@@ -1,15 +1,16 @@
 "use client";
 
-import { Box, HStack, Input, Text, VStack } from "@chakra-ui/react";
+import { Box, Grid, HStack, Input, Text, VStack } from "@chakra-ui/react";
 import React from "react";
 import { BasicTable } from "@/components/table";
 import { URLS } from "@/constants";
 import { useUsers } from "./use-users";
+import { BasicTableSkeleton } from "@/components/table/basic-table-skeleton";
 
 const rootUrl = URLS.USERS;
 
 export function Users() {
-  const { contents } = useUsers({ page: "", pageSize: "" });
+  const { contents, isLoading } = useUsers({ page: "", pageSize: "" });
   return (
     <>
       <Box bgColor="#ffffff" borderRadius="10px">
@@ -21,16 +22,10 @@ export function Users() {
         >
           <Text>User List</Text>
         </HStack>
-        {contents.length ? (
-          <VStack p={4} alignItems="flex-start" spacing={4}>
-            <HStack w="full" justifyContent="space-between">
-              <HStack justifyContent="space-between">
-                <HStack>
-                  <Text>Search: </Text>
-                  <Input />
-                </HStack>
-              </HStack>
-            </HStack>
+        <VStack p={4}>
+          {isLoading ? (
+            <BasicTableSkeleton />
+          ) : (
             <Box w="full">
               <BasicTable
                 data={contents}
@@ -40,24 +35,28 @@ export function Users() {
                     name: "ID",
                   },
                   {
+                    key: "name",
+                    name: "Name",
+                  },
+                  {
                     key: "username",
-                    name: "User Name",
+                    name: "Username",
                   },
                   {
                     key: "email",
                     name: "Email",
+                  },
+                  {
+                    key: "phone",
+                    name: "Phone",
                   },
                 ]}
                 handleDelete={() => {}}
                 rootUrl={rootUrl}
               />
             </Box>
-          </VStack>
-        ) : (
-          <VStack p={4}>
-            <Text>This table is empty ;(</Text>
-          </VStack>
-        )}
+          )}
+        </VStack>
       </Box>
     </>
   );

@@ -1,12 +1,16 @@
 import {
-  Checkbox,
+  Box,
+  HStack,
+  Skeleton,
   Table,
   TableContainer,
   Tbody,
   Td,
+  Text,
   Th,
   Thead,
   Tr,
+  VStack,
 } from "@chakra-ui/react";
 import React from "react";
 import { BasicRowActionBtns } from "./basic-row-action-btns";
@@ -16,6 +20,8 @@ export type BasicTableProps = {
   headColumns: Array<{ key: string; name: string }>;
   handleDelete: (id: number) => void;
   rootUrl: string;
+  isReadOnly?: boolean;
+  hasActionColumn?: boolean;
 };
 
 export function BasicTable({
@@ -23,7 +29,11 @@ export function BasicTable({
   headColumns,
   handleDelete,
   rootUrl,
+  isReadOnly,
+  hasActionColumn,
 }: BasicTableProps) {
+  if (!data.length) return <Text>This table is empty ;(</Text>;
+
   return (
     <>
       <TableContainer>
@@ -35,7 +45,7 @@ export function BasicTable({
                   <Th>{col.name}</Th>
                 </React.Fragment>
               ))}
-              <Th>Actions</Th>
+              {hasActionColumn ? <Th>Actions</Th> : null}
             </Tr>
           </Thead>
           <Tbody>
@@ -47,15 +57,18 @@ export function BasicTable({
                       <Td>{item[col.key]}</Td>
                     </React.Fragment>
                   ))}
-                  <Td>
-                    <BasicRowActionBtns
-                      links={{
-                        view: `${rootUrl}/${item.id}`,
-                        edit: `${rootUrl}/form/${item.id}`,
-                      }}
-                      onDelete={() => handleDelete(item.id)}
-                    />
-                  </Td>
+                  {hasActionColumn ? (
+                    <Td>
+                      <BasicRowActionBtns
+                        links={{
+                          view: `${rootUrl}/${item.id}`,
+                          edit: `${rootUrl}/form/${item.id}`,
+                        }}
+                        onDelete={() => handleDelete(item.id)}
+                        isReadOnly={isReadOnly}
+                      />
+                    </Td>
+                  ) : null}
                 </Tr>
               </React.Fragment>
             ))}

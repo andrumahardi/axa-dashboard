@@ -5,11 +5,12 @@ import React from "react";
 import { BasicTable } from "@/components/table";
 import { URLS } from "@/constants";
 import { usePosts } from "./use-posts";
+import { BasicTableSkeleton } from "@/components/table/basic-table-skeleton";
 
 const rootUrl = URLS.POSTS;
 
 export function Posts() {
-  const { posts } = usePosts({ page: "", pageSize: "" });
+  const { posts, isLoading } = usePosts({ page: "", pageSize: "" });
   return (
     <>
       <Box bgColor="#ffffff" borderRadius="10px">
@@ -21,16 +22,11 @@ export function Posts() {
         >
           <Text>Post List</Text>
         </HStack>
-        {posts.length ? (
-          <VStack p={4} alignItems="flex-start" spacing={4}>
-            <HStack w="full" justifyContent="space-between">
-              <HStack justifyContent="space-between">
-                <HStack>
-                  <Text>Search: </Text>
-                  <Input />
-                </HStack>
-              </HStack>
-            </HStack>
+
+        <VStack p={4}>
+          {isLoading ? (
+            <BasicTableSkeleton />
+          ) : (
             <Box w="full">
               <BasicTable
                 data={posts}
@@ -49,15 +45,13 @@ export function Posts() {
                   },
                 ]}
                 handleDelete={() => {}}
+                hasActionColumn
+                isReadOnly={false}
                 rootUrl={rootUrl}
               />
             </Box>
-          </VStack>
-        ) : (
-          <VStack p={4}>
-            <Text>This table is empty ;(</Text>
-          </VStack>
-        )}
+          )}
+        </VStack>
       </Box>
     </>
   );
