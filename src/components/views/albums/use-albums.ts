@@ -1,32 +1,40 @@
+import { useRouter, useSearchParams } from "next/navigation";
 import { UserListResponse, useGetUsers } from "../users/queries";
 import { AlbumListResponse, useGetAlbums } from "./queries";
+import { URLS } from "@/constants";
+import { generateQueryParams } from "@/utils";
+import { ChangeEvent } from "react";
 
-export function useAlbums({
-  page,
-  pageSize,
-}: {
-  page: string;
-  pageSize: string;
-}) {
+export function useAlbums() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const {
     data: albums,
     isLoading: isFetchingPosts,
     error: getPostsErr,
-  } = useGetAlbums({ page, pageSize });
+  } = useGetAlbums({ userId: searchParams.get("userId") || "1" });
 
   const {
     data: users,
     isLoading: isFetchingUsers,
     error: getUsersErr,
-  } = useGetUsers({ page, pageSize });
+  } = useGetUsers({ page: "", pageSize: "" });
 
   const contents = generateContents(albums?.data || [], users?.data || []);
+
+  function onChange(e: ChangeEvent<HTMLSelectElement>) {
+    router.push(
+      `${URLS.ALBUMS}${generateQueryParams({ userId: e.target.value })}`,
+    );
+  }
 
   return {
     albums: contents.albums,
     users: contents.users,
+    selectedUserId: searchParams.get("userId") || "1",
     isLoading: isFetchingPosts || isFetchingUsers,
     error: getPostsErr || getUsersErr,
+    onChange,
   };
 }
 
@@ -40,9 +48,8 @@ function generateContents(albums: AlbumListResponse, users: UserListResponse) {
       user: foundUser.name || "-",
     };
   });
-  const userContents = users.map((user) => user.name);
   return {
-    users: userContents,
+    users,
     albums: albumContents,
   };
 }

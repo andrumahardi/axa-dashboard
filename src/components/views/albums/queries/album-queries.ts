@@ -5,8 +5,7 @@ import { AxiosError } from "axios";
 import { albumsModel } from "./album-models";
 
 export type AlbumsQuery = {
-  page: string;
-  pageSize: string;
+  userId: string;
 };
 
 export const albumKeys = {

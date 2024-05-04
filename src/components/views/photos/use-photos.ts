@@ -18,7 +18,7 @@ export function usePhotos() {
     data: albums,
     isLoading: isFetchingUsers,
     error: getUsersErr,
-  } = useGetAlbums({ page: "", pageSize: "" });
+  } = useGetAlbums({ userId: "" });
 
   const contents = generateContents(photos?.data || [], albums?.data || []);
 
