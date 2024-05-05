@@ -1,11 +1,11 @@
 import { MainContainer } from "@/components/containers";
-import { Box } from "@chakra-ui/react";
+import { Photos } from "@/components/views/photos";
 
-export default function DashboardPage() {
+export default function PhotosPage() {
   return (
     <>
       <MainContainer>
-        <Box>welcome</Box>
+        <Photos />
       </MainContainer>
     </>
   );
